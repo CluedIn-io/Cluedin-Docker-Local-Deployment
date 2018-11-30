@@ -1,0 +1,56 @@
+version: '2.1'
+services:
+    logstash:
+        image: cluedin/logstash
+        labels:
+            - "com.cluedin=tools"
+        ports:
+            - "1939:1939"
+    neo4j:
+        image: cluedin/neo4j
+        environment: 
+            - NEO4J_AUTH=none
+            - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+        ports: 
+            - "7474:7474"
+            - "7687:7687"
+    elasticsearch:
+        image: cluedin/elasticsearch
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+    rabbitmq:
+        image: rabbitmq:3-management
+        ports: 
+            - "5672:5672"
+            - "15672:15672"
+        hostname: cluedin-dev
+    redis:
+        image: redis:alpine
+        ports: 
+            - "6379:6379"
+    webapp:
+        image: cluedin/webapp
+        tty: true   # Enables debugging capabilities when attached to this container.
+        environment:
+        - NODE_ENV=premise
+        - MAIN_DOMAIN=cluedin.test
+        - UNSECURE_PROTOCOL=true
+        - PORT=3000
+        - CLIENT_ID=cluedin
+        - AUTH_API=https://local.auth.cluedin-test.online:9001/   
+        - WEB_API=https://local.server.cluedin-test.online:9000/    
+        - PUBLIC_API=https://local.public.cluedin-test.online:9007/
+        - BUCKET=/
+        - TRAINING_URL='http://ec2-18-188-181-78.us-east-2.compute.amazonaws.com/' 
+        ports:
+        - "80:3000"
+    
+    sqlserver:
+        image: cluedin/sqlserver
+        ports: 
+            - "1433:1433"    
+    adminer:
+        image: clue/adminer
+        ports:
+            - "8090:80"
