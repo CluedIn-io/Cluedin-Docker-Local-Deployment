@@ -37,12 +37,12 @@ services:
         - MAIN_DOMAIN=cluedin.test
         - UNSECURE_PROTOCOL=true
         - PORT=3000
-        - CLIENT_ID=cluedin
-        - AUTH_API=https://local.auth.cluedin-test.online:9001/   
-        - WEB_API=https://local.server.cluedin-test.online:9000/    
-        - PUBLIC_API=https://local.public.cluedin-test.online:9007/
+        - CLIENT_ID=cluedin        
+        - AUTH_API #passed from the hosting env
+        - WEB_API #passed from the hosting env
+        - PUBLIC_API #passed from the hosting env
         - BUCKET=/
-        - TRAINING_URL='http://ec2-18-188-181-78.us-east-2.compute.amazonaws.com/' 
+        - TRAINING_URL='http://ec2-18-188-181-78.us-east-2.compute.amazonaws.com/'
         ports:
         - "80:3000"
     
