@@ -16,16 +16,20 @@
 #>
 [CmdletBinding()]
 param(
-    $EnvVarsFile = "./cluedin-env.vars",
+    $CluedInEnvVarsFile = "./cluedin-env.vars",
+    $DomainVarsFile = "./domains.vars",
     $ServerImageTag = "latest"
     )
+    $ErrorActionPreference="Stop"
     
     $root = $PSScriptRoot
     $scripts = Join-Path $root 'scripts'
     
     . $scripts\docker-helpers.ps1
     . $scripts\hosts-helpers.ps1
+    . $scripts\Set-Environment.ps1 $DomainVarsFile
     
+
 $cluedin_server_image = "cluedin/cluedin-server:$ServerImageTag"
 $serverContainerName = "cluedin_server"
 
@@ -37,12 +41,12 @@ Write-Host "Starting up dependencies"
 
 Set-DockerEngine -Windows
 
- # Hack for not having host.docker.internal available inside the cluedin Windows container
-& $scripts\fix-networking.ps1 .\$EnvVarsFile
+# Hack for not having host.docker.internal available inside the cluedin Windows container
+& $scripts\fix-networking.ps1 $CluedInEnvVarsFile
 
 Write-Host "Starting CluedIn container. Using image $cluedin_server_image"
 
-# & docker run -d -l cluedin --env-file $EnvVarsFile --name $serverContainerName $cluedin_server_image > $null
+& docker run -d -l cluedin -e AuthServerUrl -e ServerUrl -e ServerPublicApiUrl -e JobServerDashboardUrl --env-file $CluedInEnvVarsFile --name $serverContainerName $cluedin_server_image > $null
 
 $IP = & docker inspect $serverContainerName -f '{{.NetworkSettings.Networks.nat.IPAddress}}'
 
@@ -51,11 +55,14 @@ Write-Host "Cluedin container started with IP $IP"
 # Modify hosts file with the IP of the container that just started. 
 # This IP changes every time the container starts
 
-$envvars = Get-Content .\$EnvVarsFile
 @("ServerUrl", "AuthServerUrl", "ServerPublicApiUrl", "JobServerDashboardUrl") | Foreach-Object {
     # Capture the IP
-    $hostname =($envvars | select-string -Pattern "^$_=(?:http[s]?:\/\/)?([^:]+)").Matches[0].Groups[1].Value
-    Add-HostFileContent $IP $hostname 
+    $value = [Environment]::GetEnvironmentVariable("$_")
+    if ( $value  -match  "(?:http[s]?:\/\/)?(?<hostname>[^:]+)") {
+
+        Add-HostFileContent $IP ${Matches}.hostname
+
+    }        
 }
 # Add access to the frontend
 Add-HostFileContent "127.0.0.1" "app.cluedin.test cluedin.cluedin.test test.cluedin.test"
