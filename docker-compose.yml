@@ -34,10 +34,10 @@ services:
         tty: true   # Enables debugging capabilities when attached to this container.
         environment:
         - NODE_ENV=premise
-        - MAIN_DOMAIN=cluedin.test
         - UNSECURE_PROTOCOL=true
         - PORT=3000
         - CLIENT_ID=cluedin        
+        - MAIN_DOMAIN #passed from the hosting env
         - AUTH_API #passed from the hosting env
         - WEB_API #passed from the hosting env
         - PUBLIC_API #passed from the hosting env
