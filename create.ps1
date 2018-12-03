@@ -44,6 +44,9 @@ Set-DockerEngine -Windows
 # Hack for not having host.docker.internal available inside the cluedin Windows container
 & $scripts\fix-networking.ps1 $CluedInEnvVarsFile
 
+# Stopping local SQLserver to use the Docker one
+& $scripts\Stop-SqlServer.ps1
+
 Write-Host "Starting CluedIn container. Using image $cluedin_server_image"
 
 & docker run -d -l cluedin -e AuthServerUrl -e ServerUrl -e ServerPublicApiUrl -e JobServerDashboardUrl --env-file $CluedInEnvVarsFile --name $serverContainerName $cluedin_server_image > $null
