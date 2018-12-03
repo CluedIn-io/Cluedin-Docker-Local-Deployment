@@ -46,5 +46,5 @@ Please [create an issue in this repository](https://github.com/CluedIn-io/Simple
 
 If you do see  `cluedin/cluedin-server` ? All good.
 
-If you do not see the organization and you are a certified developers or a CluedIn employee, please contact [Raul](mailto:rjz@cluedin.net) or [Pierre](mailto:pid@cluedin.net).
+If you do not see the repository `cluedin/cluedin-server` and you are a certified developers or a CluedIn employee, please contact [Raul](mailto:rjz@cluedin.net) or [Pierre](mailto:pid@cluedin.net).
 
