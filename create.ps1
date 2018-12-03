@@ -42,7 +42,7 @@ Set-DockerEngine -Windows
 
 Write-Host "Starting CluedIn container. Using image $cluedin_server_image"
 
-# & docker run -d -l cluedin --env-file $EnvVarsFile --name $serverContainerName $cluedin_server_image > $null
+& docker run -d -l cluedin --env-file $EnvVarsFile --name $serverContainerName $cluedin_server_image > $null
 
 $IP = & docker inspect $serverContainerName -f '{{.NetworkSettings.Networks.nat.IPAddress}}'
 
