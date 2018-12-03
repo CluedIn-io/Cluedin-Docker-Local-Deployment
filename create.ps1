@@ -45,7 +45,7 @@ Set-DockerEngine -Windows
 & $scripts\fix-networking.ps1 $CluedInEnvVarsFile
 
 # Stopping local SQLserver to use the Docker one
-& $scripts\Stop-SqlServer.ps1
+Get-Service *sql* | Stop-Service
 
 Write-Host "Starting CluedIn container. Using image $cluedin_server_image"
 
