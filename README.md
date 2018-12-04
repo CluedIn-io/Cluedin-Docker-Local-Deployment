@@ -67,7 +67,7 @@ This is not the main premise of this repository, however, since the webapp when 
 
 For more information, please refer to the [CluedIn UI repository](https://github.com/CluedIn-io/CluedIn.Widget) on how to setup env variables correctly.
 
-### Problem with networking (such as Windows container does not talks to Linux containers?)
+### Problem with networking (such as Windows container does not talk to Linux containers?)
 
 If you have multiple active network, make sure to the disable the unused one. It seems, for some reason, Docker seems to give a higher value to cable network (even if cable is not plugged in) over Wifi.
 
