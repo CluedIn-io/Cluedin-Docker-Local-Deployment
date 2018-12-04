@@ -7,6 +7,15 @@ This repo allows you to run CluedIn locally using Docker
 - [Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows)
 - Access to the private repositories inside the  [cluedin](https://hub.docker.com/u/cluedin/) DockerHub organization. You will require a Docker Hub account and request access from CluedIn; then use this account to do a ```docker login```.
 
+## Setup with latest
+
+If you want to run with the latest release, do not forget to pull the latest images from docker hub.
+
+Run:
+
+- `docker pull cluedin/cluedin-server`
+- `docker pull cluedin/webapp`
+
 ## Usage
 
 As administrator, run ```create.ps1```. The app should be available under [http://app.cluedin.test](http://app.cluedin.test).
@@ -57,3 +66,11 @@ This repository is *NOT* meant to be used when working with the Back-End. The ex
 This is not the main premise of this repository, however, since the webapp when running natively usually works over port 3000, and the docker container is exposing port 80, there should not be any clash on your workstation.
 
 For more information, please refer to the [CluedIn UI repository](https://github.com/CluedIn-io/CluedIn.Widget) on how to setup env variables correctly.
+
+### Problem with networking (such as Windows container does not talks to Linux containers?)
+
+If you have multiple active network, make sure to the disable the unused one. It seems, for some reason, Docker seems to give a higher value to cable network (even if cable is not plugged in) over Wifi.
+
+On Win10 Pro: Control Panel\Network and Internet\Network Connections and disable the ones that are not used.
+
+NOTE: Do not disable the 'vEthernet' and the 'vEthernet (Docker NAT)', those are virtual switch created by Hyper V to let your windows container talk to the outside world.
