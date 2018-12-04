@@ -69,7 +69,7 @@ For more information, please refer to the [CluedIn UI repository](https://github
 
 ### Problem with networking (such as Windows container does not talk to Linux containers?)
 
-If you have multiple active network, make sure to the disable the unused one. It seems, for some reason, Docker seems to give a higher value to cable network (even if cable is not plugged in) over Wifi.
+If you have multiple active network, make sure to disable the unused one. It seems, for some reason, Docker seems to give a higher value to cable network (even if network cable is not plugged in) over Wifi.
 
 On Win10 Pro: Control Panel\Network and Internet\Network Connections and disable the ones that are not used.
 
