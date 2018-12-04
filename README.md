@@ -48,3 +48,12 @@ If you do see  `cluedin/cluedin-server` ? All good.
 
 If you do not see the repository `cluedin/cluedin-server` and you are a certified developers or a CluedIn employee, please contact [Raul](mailto:rjz@cluedin.net) or [Pierre](mailto:pid@cluedin.net).
 
+### As a back-end developer guy, I want to test my local changes using the Simple Docker Deployment?
+
+This repository is *NOT* meant to be used when working with the Back-End. The existing [CluedIn repo](https://github.com/CluedIn-io/CluedIn) already supports that scenario.
+
+### As a front-end developer guy, I want to test local UI changes using the Simple Docker Deployment?
+
+This is not the main premise of this repository, however, since the webapp when running natively usually works over port 3000, and the docker container is exposing port 80, there should not be any clash on your workstation.
+
+For more information, please refer to the [CluedIn UI repository](https://github.com/CluedIn-io/CluedIn.Widget) on how to setup env variables correctly.
