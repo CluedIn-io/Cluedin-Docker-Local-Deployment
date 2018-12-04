@@ -9,7 +9,7 @@ This repo allows you to run CluedIn locally using Docker
 
 ## Setup with latest
 
-If you want to run with the latest release, do not forget to pull the latest images for CluedIn images.
+If you want to run with the latest release, do not forget to pull the latest images from docker hub.
 
 Run:
 
