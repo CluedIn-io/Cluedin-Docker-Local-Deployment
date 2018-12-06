@@ -1,3 +1,10 @@
+function ValidateIp{
+    param([string]$IPAddress)
+    
+    if ($IPAddress -notmatch "(?:(:?2[0-4]\d|25[0-5]|[01]?\d{1,2})\.){3}\d{1,3}"){        
+        Throw "$IPAddress not a valid IP"        
+    }
+}
 
 function Add-HostFileContent {
     [CmdletBinding()]
@@ -17,9 +24,7 @@ function Add-HostFileContent {
         Throw "Hosts file not found"            
     }            
 
-    if ($IPAddress -notmatch "(\d{1,3}\.){3}\d{1,3}" ){
-        Throw "$IPAddress not a valid IP"        
-    }
+    ValidateIp $IPAddress
 
     $pattern = "^.*\b$hostname\b.*$"
     
@@ -49,18 +54,17 @@ function Remove-HostFileContent {
         Throw "Hosts file not found"            
     }
 
-    if ($IPAddress -notmatch "(\d{1,3}\.){3}\d{1,3}" ){
-        Throw "$IPAddress not a valid IP"        
+    ValidateIp $IPAddress
+    
+    $pattern = "^\s*$($IPAddress -replace "\.","\.")\s"
+       
+    try {
+        $newContent= ((Get-Content -Path $file) |        
+            Select-String -Pattern $pattern -NotMatch -Encoding ASCII)
+            Set-Content -Path $file -Force -Encoding ASCII -value $newContent            
     }
-    
-    $pattern = "^\s*" + ($IPAddress -replace "\.","\.") + "\s"
-    
-    Copy-Item $file "$file.original"    
-    
-    (Get-Content -Path $file) |        
-        Select-String -Pattern $pattern -NotMatch -Encoding ASCII |
-        Set-Content -Path $file -Force -Encoding ASCII        
-
-    Remove-Item "$file.original"
+    catch {
+        Write-Error "Could not remove entry $IPAddress as $file file is locked"        
+    }
 }
 
