@@ -36,6 +36,17 @@ $serverContainerName = "cluedin_server"
 Set-DockerEngine -Linux
 
 Write-Host "Starting up dependencies"
+# Stopping local SQLserver to use the Docker one
+Get-Service *sql* | Stop-Service
+
+$waitTime=0
+while( (Get-Service  *sql* | Where-Object {$_.Status -eq "Running" }).Count -gt 0){
+    Start-Sleep -Seconds 1
+    $waitTime=$waitTime+1
+    if($waitTime -gt 30){
+        Throw "Timeout waiting to stop SQL Services"
+    }
+}
 
 & docker-compose up -d
 
@@ -43,6 +54,7 @@ Set-DockerEngine -Windows
 
 # Hack for not having host.docker.internal available inside the cluedin Windows container
 & $scripts\fix-networking.ps1 $CluedInEnvVarsFile
+
 
 Write-Host "Starting CluedIn container. Using image $cluedin_server_image"
 
