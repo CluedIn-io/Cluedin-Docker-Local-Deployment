@@ -22,13 +22,3 @@ function Set-DockerEngine {
 
     & "$Env:ProgramFiles\Docker\Docker\DockerCli.exe" $flag
 }
-
-function Get-DockerEngine {
-    docker version -f '{{.Server.Os}}'
-    & "$Env:ProgramFiles\Docker\Docker\DockerCli.exe" -Version
-}
-
-
-function Edit-HostFile {
-    & notepad C:\windows\system32\drivers\etc\hosts
-}
