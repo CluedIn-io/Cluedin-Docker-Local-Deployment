@@ -4,7 +4,10 @@ This repo allows you to run CluedIn locally using Docker
 
 ## Requirements
 
-- [Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows)
+- Windows version 1803 or greater
+- Latest version of [Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows) (> 19.03.2)
+- Docker [experimental features](https://docs.docker.com/docker-for-windows/#daemon) turned on 
+- Docker set up to run [Windows containers](https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers)
 - Access to the private repositories inside the  [cluedin](https://hub.docker.com/u/cluedin/) DockerHub organization. You will require a Docker Hub account and request access from CluedIn; then use this account to do a ```docker login```.
 
 ## Setup with latest
@@ -13,33 +16,32 @@ If you want to run with the latest release, do not forget to pull the latest ima
 
 Run:
 
-- `docker pull cluedin/cluedin-server`
-- `docker pull cluedin/webapp`
+- `docker-compose pull`
 
 ## Usage
 
-As administrator, run ```create.ps1```. The app should be available under [http://app.cluedin.test](http://app.cluedin.test).
+The *first time* you run the application you need to create some SSL certificates. As **administrator**, run ```./pki/Create-Certificates.ps1 -Trust```.
 
-You can then stop and start the stack, using the ```start.ps1``` and ```stop.ps1``` scripts. Data is persisted.
+The application is run doing a via docker-compose You can then bring the application up doing
 
-You can remove all traces of cluedin, including all the data, invoking the ```remove.ps1``` script.
+```
+docker-compose up -d
+```
 
-### Extra info
-The ```create.ps1``` script will:
+The app should be available under [http://app.127.0.0.1.xip.io](http://app.127.0.0.1.xip.io).
 
-1. Crate a self-signed cert for https communication and add it as a trusted cert
-1. Switch to Linux Containers
-1. Start up all the depdencies (redis, neo4j, elasticsearch, sqlserver) and the CluedIn webapp
-1. Switch to Windows Containers
-1. Start up the CluedIn backend Server
-1. Add two entries to your hosts file: 
-    1. Add 'app.cluedin.test' and 'cluedin.cluedin.test' mapped to 127.0.0.1
-    1. Add 'server.cluedin.test' to the IP of the docker container running the CluedIn backend server
+You can then stop and start the stack, using the usual docker-compose commands
 
-The script takes two optional parameters: 
+```
+docker-compose stop # containers are turned off, state is maintained
+docker-compose down # containers are removed, state is lost
+```
 
-- -ServerImageTag: Override the image tag for the CluedIn backend server
-- -EnvVarsFile: Pass a different file with environment variables for the backend server
+You can remove the certificates running
+
+```powershell
+./pki/Remove-Certificates.ps1
+```
 
 ### FAQ
 
