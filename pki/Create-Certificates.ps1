@@ -47,9 +47,9 @@ if(Test-Path $server_certs_vars){
 'CERTVALUE_AUTH',
 'CERTVALUE_PUBLIC',
 'CERTVALUE_WEBHOOK') | ForEach-Object {
-    "$_=$certBase64" >> $server_certs_vars
+    "$_=$certBase64" | out-file -encoding UTF8 $server_certs_vars -Append
 }
-"CERT_PASSWORD=$secretBase64" >> $server_certs_vars
+"CERT_PASSWORD=$secretBase64" | out-file -encoding UTF8 $server_certs_vars -Append
 
 
 # Trust root certificate
