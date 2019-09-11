@@ -4,7 +4,7 @@ This repo allows you to run CluedIn locally using Docker
 
 ## Requirements
 
-- Windows version 1803 or greater
+- Windows version 1903 or greater
 - Latest version of [Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows) (> 19.03.2)
 - Docker [experimental features](https://docs.docker.com/docker-for-windows/#daemon) turned on 
 - Docker set up to run [Windows containers](https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers)
