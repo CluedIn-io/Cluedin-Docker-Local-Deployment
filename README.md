@@ -39,7 +39,7 @@ The application is run doing a via docker-compose You can then bring the applica
 docker-compose up -d
 ```
 
-The app should be available under [http://app.127.0.0.1.xip.io](http://app.127.0.0.1.xip.io).
+The app should be available under [https://app.127.0.0.1.xip.io](https://app.127.0.0.1.xip.io).
 
 You can then stop and start the stack, using the usual docker-compose commands
 
