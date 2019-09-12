@@ -54,7 +54,7 @@ if(Test-Path $server_certs_vars){
 
 # Trust root certificate
 if($Trust){
-    Import-Certificate -FilePath ${certsFolder}/root.crt -CertStoreLocation Cert:\LocalMachine\Root
+    Import-Certificate -FilePath ${certsFolder}/root.crt -CertStoreLocation Cert:\CurrentUser\Root
 }
 
 # # Install server certificate for ports 9000/9007
