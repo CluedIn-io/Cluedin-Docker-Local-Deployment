@@ -52,6 +52,21 @@ docker-compose logs -f server
 
 The server will be ready when you see the message `Server Started`. Open your browser and the CluedIn should be available under [https://app.127.0.0.1.xip.io](https://app.127.0.0.1.xip.io).
 
+In order to use CluedIn you need to create an *organization*. There are two ways to do this
+
+- Using a script. In a `Powershell` console run `bootstrap/Create-Organization.ps1`. This will create an organization with the following parameters:
+
+    |          |        |   
+    |----------|--------|
+    | name     | foobar |
+    | url      | [https://foobar.127.0.0.1.xip.io](https://foobar.127.0.0.1.xip.io) |
+    | admin    | admin@foobar.com |
+    | password | foobar23 |
+
+    *These values can be overridden by passing parameters to the Powershell script*
+- Using the UI
+## Removal
+
 You can then stop and start the stack, using the usual docker-compose commands
 
 ```
