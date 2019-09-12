@@ -34,13 +34,20 @@ services:
     env_file:
     - ./var-files/app.vars
     environment:
-    # Pass email configuration if it is already overridden in the bare metal
-    - EmailSettings__SmtpPassword
-    - EmailSettings__SmtpUserName
+
+    - EmailSettings__SpecifiedPickupDirectory=/emails
+    # If you want to use a mail server - comment out the env var above 
+    # and add configuration below
+    # - EmailSettings__SmtpUserName=??
+    # - EmailSettings__SmtpPassword=??
+    # - EmailSettings__SmtpHost=
+    # - EmailSettings__SmtpPort=25
+
     ports:
     - "443:443"
     volumes:
     - ./pki/certs:/certs
+    - ./emails:/emails
 
 # Dependencies
   neo4j:

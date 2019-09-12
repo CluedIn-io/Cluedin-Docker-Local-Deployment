@@ -64,7 +64,15 @@ In order to use CluedIn you need to create an *organization*. There are two ways
     | password | foobar23 |
 
     *These values can be overridden by passing parameters to the Powershell script*
+
 - Using the UI
+    1. Navigate to the `https://app.127.0.0.1.xip.io/signup` page.
+    1. Fill in an email address
+    1. Check the `/emails` folder. You should be able to open the file double clicking on it with the standard Mail application from Windows.
+    1. Click on the *Setup my organization link* in the email
+    1. Fill in the information and click in *Sign up*
+    1. You will be redirected to the login screen. Simply add the information created in the step above.
+
 ## Removal
 
 You can then stop and start the stack, using the usual docker-compose commands
