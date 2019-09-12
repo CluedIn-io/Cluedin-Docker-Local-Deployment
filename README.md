@@ -39,7 +39,18 @@ The application is run doing a via docker-compose You can then bring the applica
 docker-compose up -d
 ```
 
-The app should be available under [https://app.127.0.0.1.xip.io](https://app.127.0.0.1.xip.io).
+The very first time you run it, Docker will pull all the images. You can check if the the different services are created running
+
+```
+docker-compose ps
+```
+
+The CluedIn server component takes a while to boot up. You can verify it is starting correctly:
+```
+docker-compose logs -f server
+```
+
+The server will be ready when you see the message `Server Started`. Open your browser and the CluedIn should be available under [https://app.127.0.0.1.xip.io](https://app.127.0.0.1.xip.io).
 
 You can then stop and start the stack, using the usual docker-compose commands
 
