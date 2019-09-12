@@ -31,7 +31,7 @@ Run:
 
 ## Usage
 
-The *first time* you run the application you need to create some SSL certificates. As **administrator**, run ```./pki/Create-Certificates.ps1 -Trust```.
+The *first time* you run the application you need to create some SSL certificates. Open an **administrator `Powershell`** console, run ```./pki/Create-Certificates.ps1 -Trust```.
 
 The application is run doing a via docker-compose You can then bring the application up doing
 
