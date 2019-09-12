@@ -4,11 +4,22 @@ This repo allows you to run CluedIn locally using Docker
 
 ## Requirements
 
-- Windows version 1903 or greater
+- Windows version **1903** or greater
 - Latest version of [Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows) (> 19.03.2)
 - Docker [experimental features](https://docs.docker.com/docker-for-windows/#daemon) turned on 
 - Docker set up to run [Windows containers](https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers)
 - Access to the private repositories inside the  [cluedin](https://hub.docker.com/u/cluedin/) DockerHub organization. You will require a Docker Hub account and request access from CluedIn; then use this account to do a ```docker login```.
+
+You can verify if you satisfy these requirements and you can run simultaneously Windows and Linux containers by opening a `Powershell` console and running:
+```
+docker info | sls 'Storage Driver'
+```
+
+The returned value should be:
+```
+ Storage Driver: windowsfilter (windows) lcow (linux)
+```
+
 
 ## Setup with latest
 
