@@ -1,0 +1,1 @@
+By default emails will appear as files in this folder

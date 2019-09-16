@@ -4,8 +4,22 @@ This repo allows you to run CluedIn locally using Docker
 
 ## Requirements
 
-- [Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows)
+- Windows version **1903** or greater
+- Latest version of [Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows) (> 19.03.2)
+- Docker [experimental features](https://docs.docker.com/docker-for-windows/#daemon) turned on 
+- Docker set up to run [Windows containers](https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers)
 - Access to the private repositories inside the  [cluedin](https://hub.docker.com/u/cluedin/) DockerHub organization. You will require a Docker Hub account and request access from CluedIn; then use this account to do a ```docker login```.
+
+You can verify if you satisfy these requirements and you can run simultaneously Windows and Linux containers by opening a `Powershell` console and running:
+```
+docker info | sls 'Storage Driver'
+```
+
+The returned value should be:
+```
+ Storage Driver: windowsfilter (windows) lcow (linux)
+```
+
 
 ## Setup with latest
 
@@ -13,33 +27,66 @@ If you want to run with the latest release, do not forget to pull the latest ima
 
 Run:
 
-- `docker pull cluedin/cluedin-server`
-- `docker pull cluedin/webapp`
+- `docker-compose pull`
 
 ## Usage
 
-As administrator, run ```create.ps1```. The app should be available under [http://app.cluedin.test](http://app.cluedin.test).
+The *first time* you run the application you need to create some SSL certificates. Open an **administrator `Powershell`** console, run ```./pki/Create-Certificates.ps1 -Trust```.
 
-You can then stop and start the stack, using the ```start.ps1``` and ```stop.ps1``` scripts. Data is persisted.
+The application is run doing a via docker-compose You can then bring the application up doing
 
-You can remove all traces of cluedin, including all the data, invoking the ```remove.ps1``` script.
+```
+docker-compose up -d
+```
 
-### Extra info
-The ```create.ps1``` script will:
+The very first time you run it, Docker will pull all the images. You can check if the the different services are created running
 
-1. Crate a self-signed cert for https communication and add it as a trusted cert
-1. Switch to Linux Containers
-1. Start up all the depdencies (redis, neo4j, elasticsearch, sqlserver) and the CluedIn webapp
-1. Switch to Windows Containers
-1. Start up the CluedIn backend Server
-1. Add two entries to your hosts file: 
-    1. Add 'app.cluedin.test' and 'cluedin.cluedin.test' mapped to 127.0.0.1
-    1. Add 'server.cluedin.test' to the IP of the docker container running the CluedIn backend server
+```
+docker-compose ps
+```
 
-The script takes two optional parameters: 
+The CluedIn server component takes a while to boot up. You can verify it is starting correctly:
+```
+docker-compose logs -f server
+```
 
-- -ServerImageTag: Override the image tag for the CluedIn backend server
-- -EnvVarsFile: Pass a different file with environment variables for the backend server
+The server will be ready when you see the message `Server Started`. Open your browser and the CluedIn should be available under [https://app.127.0.0.1.xip.io](https://app.127.0.0.1.xip.io).
+
+In order to use CluedIn you need to create an *organization*. There are two ways to do this
+
+- Using a script. In a `Powershell` console run `bootstrap/Create-Organization.ps1`. This will create an organization with the following parameters:
+
+    |          |        |   
+    |----------|--------|
+    | name     | foobar |
+    | url      | [https://foobar.127.0.0.1.xip.io](https://foobar.127.0.0.1.xip.io) |
+    | admin    | admin@foobar.com |
+    | password | foobar23 |
+
+    *These values can be overridden by passing parameters to the Powershell script*
+
+- Using the UI
+    1. Navigate to the `https://app.127.0.0.1.xip.io/signup` page.
+    1. Fill in an email address
+    1. Check the `/emails` folder. You should be able to open the file double clicking on it with the standard Mail application from Windows.
+    1. Click on the *Setup my organization link* in the email
+    1. Fill in the information and click in *Sign up*
+    1. You will be redirected to the login screen. Simply add the information created in the step above.
+
+## Removal
+
+You can then stop and start the stack, using the usual docker-compose commands
+
+```
+docker-compose stop # containers are turned off, state is maintained
+docker-compose down # containers are removed, state is lost
+```
+
+You can remove the certificates running
+
+```powershell
+./pki/Remove-Certificates.ps1
+```
 
 ### FAQ
 

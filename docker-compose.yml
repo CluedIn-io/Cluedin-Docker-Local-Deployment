@@ -1,56 +1,116 @@
-version: '2.1'
+version: '2.4'
 services:
-    logstash:
-        image: cluedin/logstash
-        labels:
-            - "com.cluedin=tools"
-        ports:
-            - "1939:1939"
-    neo4j:
-        image: cluedin/neo4j
-        environment: 
-            - NEO4J_AUTH=none
-            - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
-        ports: 
-            - "7474:7474"
-            - "7687:7687"
-    elasticsearch:
-        image: cluedin/elasticsearch
-        ports:
-            - "9200:9200"
-            - "9300:9300"
-    rabbitmq:
-        image: rabbitmq:3-management
-        ports: 
-            - "5672:5672"
-            - "15672:15672"
-        hostname: cluedin-dev
-    redis:
-        image: redis:alpine
-        ports: 
-            - "6379:6379"
-    webapp:
-        image: cluedin/webapp
-        tty: true   # Enables debugging capabilities when attached to this container.
-        environment:
-        - NODE_ENV=premise
-        - UNSECURE_PROTOCOL=true
-        - PORT=3000
-        - CLIENT_ID=cluedin        
-        - MAIN_DOMAIN #passed from the hosting env
-        - AUTH_API #passed from the hosting env
-        - WEB_API #passed from the hosting env
-        - PUBLIC_API #passed from the hosting env
-        - BUCKET=/
-        - TRAINING_URL='http://ec2-18-188-181-78.us-east-2.compute.amazonaws.com/'
-        ports:
-        - "80:3000"
-    
-    sqlserver:
-        image: cluedin/sqlserver
-        ports: 
-            - "1433:1433"    
-    adminer:
-        image: clue/adminer
-        ports:
-            - "8090:80"
+  server:
+    image: cluedin/cluedin-server
+    platform: windows
+    env_file:
+    - ./pki/certs/server-certs.vars
+    - ./var-files/server.vars
+    environment:
+    - Models.Enabled=false
+    - EmailServer=smtp.mailtrap.io
+    - EmailPort=2525
+    - EmailDisplayName=CluedIn
+    - EmailSender=app@cluedin-test.online
+    - EmailUserName
+    - EmailPassword
+    ports:
+    - "9000:9000"
+    - "9001:9001"
+    depends_on:
+    - sqlserver
+    - redis
+    - rabbitmq
+    - neo4j
+    - elasticsearch
+
+  app:
+    image: cluedin/app
+    platform: linux
+    entrypoint:
+    - sh
+    - -c
+    - cat /certs/root.crt >> /etc/ssl/certs/ca-certificates.crt && dotnet CluedIn.App.dll
+    env_file:
+    - ./var-files/app.vars
+    environment:
+
+    - EmailSettings__SpecifiedPickupDirectory=/emails
+    # If you want to use a mail server - comment out the env var above 
+    # and add configuration below
+    # - EmailSettings__SmtpUserName=??
+    # - EmailSettings__SmtpPassword=??
+    # - EmailSettings__SmtpHost=
+    # - EmailSettings__SmtpPort=25
+
+    ports:
+    - "443:443"
+    volumes:
+    - ./pki/certs:/certs
+    - ./emails:/emails
+
+# Dependencies
+  neo4j:
+    image: cluedin/neo4j
+    platform: linux
+    environment:
+    - NEO4J_AUTH=none
+    - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+    ports:
+    - "7474:7474"
+    - "7687:7687"
+
+  elasticsearch:
+    image: cluedin/elasticsearch
+    platform: linux
+    ports:
+    - "9200:9200"
+    - "9300:9300"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    platform: linux
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    hostname: cluedin-dev
+
+  redis:
+    image: redis:alpine
+    platform: linux
+    ports:
+    - "6379:6379"
+
+  sqlserver:
+    image: cluedin/sqlserver
+    platform: linux
+    command: ["sh","-c","echo '127.0.0.1 localhost'>> /etc/hosts; /init/init.sh"]
+    mem_limit: 3G
+    extra_hosts:
+    - "localhost:127.0.0.1"
+    ports:
+    - "1433:1433"
+
+  openrefine:
+    image: cluedin/openrefine:v2.3
+    entrypoint:
+    - sh
+    - -c
+    - cp /config/* /app/ -f && /app/refine
+    platform: linux
+    ports:
+    - "3333:3333"
+    mem_limit: 2G
+    volumes:
+    - ./config-files:/config
+
+# Useful tools
+  seq:
+    image: datalust/seq:latest
+    platform: linux
+    restart: unless-stopped
+    environment:
+    - ACCEPT_EULA=Y
+    ports:
+    - "3200:80"
+    - "5341:5341"
