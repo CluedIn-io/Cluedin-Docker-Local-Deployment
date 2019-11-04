@@ -1,3 +1,5 @@
 pki/certs
 emails/*.eml
 *.dll
+components/
+!components/*.md

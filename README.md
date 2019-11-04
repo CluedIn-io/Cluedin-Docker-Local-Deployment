@@ -77,7 +77,9 @@ In order to use CluedIn you need to create an *organization*. There are two ways
 
 You can add extra providers or enrichers in two different ways:
 
-1. Add a a file named `Packages.txt` in the `./components` folder with the names of the nuget packages for the components you want to install. If the Nuget packages are not available publicly, add a `KEY` environment variable with the token to access the Nuget feed.
+1. Via Nuget packages
+    1. Add a a file named `Packages.txt` in the `./components` folder with the names of the nuget packages for the components you want to install.
+    1. If the Nuget packages are not available publicly add a `nuget.config` file in the `./components` folder. Either pass the password token to the nuget.config or create a `KEY` environment variable with it.
 1. Copy the relevant DLLs for the components in the `./components` folder.
 
 ## Removal
