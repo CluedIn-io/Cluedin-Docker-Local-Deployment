@@ -102,6 +102,9 @@ services:
     - "5672:5672"
     - "15672:15672"
     hostname: cluedin-dev
+    environment: 
+    - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=0.95
+    - RABBITMQ_LOOPBACK_USERS=none
 
   redis:
     image: redis:5.0-alpine
