@@ -5,7 +5,7 @@ This repo allows you to run CluedIn locally using Docker
 ## Requirements
 
 - Windows version **1903** or greater
-- Latest version of [Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows) (> 19.03.2)
+- Latest version of [Docker for Windows](https://store.docker.com/editions/community/docker-ce-desktop-windows) (> 19.03.4)
 - Docker [experimental features](https://docs.docker.com/docker-for-windows/#daemon) turned on 
 - Docker set up to run [Windows containers](https://docs.docker.com/docker-for-windows/#switch-between-windows-and-linux-containers)
 - Access to the private repositories inside the  [cluedin](https://hub.docker.com/u/cluedin/) DockerHub organization. You will require a Docker Hub account and request access from CluedIn; then use this account to do a ```docker login```.
@@ -50,7 +50,7 @@ The CluedIn server component takes a while to boot up. You can verify it is star
 docker-compose logs -f server
 ```
 
-The server will be ready when you see the message `Server Started`. Open your browser and the CluedIn should be available under [https://app.127.0.0.1.xip.io](https://app.127.0.0.1.xip.io).
+The server will be ready when you see the message `Server Started`. Open your browser and CluedIn should be available under [https://app.127.0.0.1.xip.io](https://app.127.0.0.1.xip.io).
 
 In order to use CluedIn you need to create an *organization*. There are two ways to do this
 
@@ -73,13 +73,20 @@ In order to use CluedIn you need to create an *organization*. There are two ways
     1. Fill in the information and click in *Sign up*
     1. You will be redirected to the login screen. Simply add the information created in the step above.
 
+## Adding extra components
+
+You can add extra providers or enrichers in two different ways:
+
+1. Add a a file named `Packages.txt` in the `./components` folder with the names of the nuget packages for the components you want to install. If the Nuget packages are not available publicly, add a `KEY` environment variable with the token to access the Nuget feed.
+1. Copy the relevant DLLs for the components in the `./components` folder.
+
 ## Removal
 
 You can then stop and start the stack, using the usual docker-compose commands
 
 ```
-docker-compose stop # containers are turned off, state is maintained
-docker-compose down # containers are removed, state is lost
+docker-compose down # containers are removed, data is kept 
+docker-compose down -v # containers are removed and data is lost
 ```
 
 You can remove the certificates running
