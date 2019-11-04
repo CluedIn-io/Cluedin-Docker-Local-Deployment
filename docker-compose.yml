@@ -69,6 +69,8 @@ services:
     ports:
     - "9200:9200"
     - "9300:9300"
+    volumes:
+    - elasticsearch:/usr/share/elasticsearch/data
 
   sqlserver:
     image: cluedin/sqlserver:${TAG}
@@ -126,3 +128,4 @@ services:
 
 volumes:
   sqlserver:
+  elasticsearch:
