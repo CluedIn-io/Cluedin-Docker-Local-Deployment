@@ -14,9 +14,12 @@ services:
     - EmailSender=app@cluedin-test.online
     - EmailUserName
     - EmailPassword
+    - KEY
     ports:
     - "9000:9000"
     - "9001:9001"
+    volumes:
+    - ./components:c:\components
     depends_on:
     - sqlserver
     - redis
