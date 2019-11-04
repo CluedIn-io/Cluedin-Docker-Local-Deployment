@@ -74,11 +74,13 @@ services:
     image: cluedin/sqlserver:${TAG}
     platform: linux
     command: ["sh","-c","echo '127.0.0.1 localhost'>> /etc/hosts; /init/init.sh"]
+    environment:
+    - MSSQL_DATA_DIR=/mssql-data
     mem_limit: 3G
-    extra_hosts:
-    - "localhost:127.0.0.1"
     ports:
     - "1433:1433"
+    volumes:
+    - sqlserver:/mssql-data
 
   openrefine:
     image: cluedin/openrefine:${TAG}
@@ -118,3 +120,6 @@ services:
     ports:
     - "3200:80"
     - "5341:5341"
+
+volumes:
+  sqlserver:
