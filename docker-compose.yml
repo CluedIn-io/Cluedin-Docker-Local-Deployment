@@ -1,7 +1,7 @@
 version: '2.4'
 services:
   server:
-    image: cluedin/cluedin-server
+    image: cluedin/cluedin-server:${TAG}
     platform: windows
     env_file:
     - ./pki/certs/server-certs.vars
@@ -14,9 +14,12 @@ services:
     - EmailSender=app@cluedin-test.online
     - EmailUserName
     - EmailPassword
+    - KEY
     ports:
     - "9000:9000"
     - "9001:9001"
+    volumes:
+    - ./components:c:\components
     depends_on:
     - sqlserver
     - redis
@@ -25,7 +28,7 @@ services:
     - elasticsearch
 
   app:
-    image: cluedin/app
+    image: cluedin/app:${TAG}
     platform: linux
     entrypoint:
     - sh
@@ -51,48 +54,41 @@ services:
 
 # Dependencies
   neo4j:
-    image: cluedin/neo4j
+    image: cluedin/neo4j:${TAG}
     platform: linux
     environment:
     - NEO4J_AUTH=none
     - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+    - NEO4J_EDITION=community
     ports:
     - "7474:7474"
     - "7687:7687"
+    volumes:
+    - neo4j:/data
 
   elasticsearch:
-    image: cluedin/elasticsearch
+    image: cluedin/elasticsearch:${TAG}
     platform: linux
     ports:
     - "9200:9200"
     - "9300:9300"
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    platform: linux
-    ports:
-    - "5672:5672"
-    - "15672:15672"
-    hostname: cluedin-dev
-
-  redis:
-    image: redis:alpine
-    platform: linux
-    ports:
-    - "6379:6379"
+    volumes:
+    - elasticsearch:/usr/share/elasticsearch/data
 
   sqlserver:
-    image: cluedin/sqlserver
+    image: cluedin/sqlserver:${TAG}
     platform: linux
     command: ["sh","-c","echo '127.0.0.1 localhost'>> /etc/hosts; /init/init.sh"]
+    environment:
+    - MSSQL_DATA_DIR=/mssql-data
     mem_limit: 3G
-    extra_hosts:
-    - "localhost:127.0.0.1"
     ports:
     - "1433:1433"
+    volumes:
+    - sqlserver:/mssql-data
 
   openrefine:
-    image: cluedin/openrefine:v2.3
+    image: cluedin/openrefine:${TAG}
     entrypoint:
     - sh
     - -c
@@ -104,9 +100,27 @@ services:
     volumes:
     - ./config-files:/config
 
+  rabbitmq:
+    image: rabbitmq:3.7-management-alpine
+    platform: linux
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    hostname: cluedin-dev
+    environment: 
+    - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=0.95
+    - RABBITMQ_LOOPBACK_USERS=none
+
+  redis:
+    image: redis:5.0-alpine
+    platform: linux
+    ports:
+    - "6379:6379"
+
+
 # Useful tools
   seq:
-    image: datalust/seq:latest
+    image: datalust/seq:5
     platform: linux
     restart: unless-stopped
     environment:
@@ -114,3 +128,8 @@ services:
     ports:
     - "3200:80"
     - "5341:5341"
+
+volumes:
+  sqlserver:
+  elasticsearch:
+  neo4j:
