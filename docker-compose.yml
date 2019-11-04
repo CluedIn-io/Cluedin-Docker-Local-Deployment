@@ -62,6 +62,8 @@ services:
     ports:
     - "7474:7474"
     - "7687:7687"
+    volumes:
+    - neo4j:/data
 
   elasticsearch:
     image: cluedin/elasticsearch:${TAG}
@@ -129,3 +131,4 @@ services:
 volumes:
   sqlserver:
   elasticsearch:
+  neo4j:
